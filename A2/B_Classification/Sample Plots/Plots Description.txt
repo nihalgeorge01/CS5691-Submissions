@@ -1,0 +1,7 @@
+1. It shows PDF (gaussians) for different classes and their contours (constant density curves).
+2. It shows Decision Boundary, Decision Surface(the pink,yellow and blue color) and constant density curves with it.
+3. Comparative ROC and DET curves. (It should be in this way only!!!)
+4. It just shows the PDF(gaussians) for each class.
+5. It just shows the constant density curves (contours) and eigenvectors.
+6. Decision Boundary and decision surface. Self Descriptive
+7. Confusion matrices. (You may not give all in the report)
