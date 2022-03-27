@@ -8,7 +8,6 @@
 import pandas as pd
 import numpy as np
 import scipy.stats
-import matplotlib.ticker as ticker
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -193,7 +192,7 @@ eig_all_lst = [eig_1_lst, eig_2_lst, eig_3_lst, eig_4_lst, eig_5_lst]
 
 # %%
 # Apply Bayes rule, get classifier. Takes an input vector, returns predicted class
-priors = [1/3, 1/3, 1/3]
+priors = [cl_counts[i]/m for i in range(3)]
 def predict(x, pdf_lst):
     
     likes = [pdf_lst[i].p(x) for i in range(3)]
@@ -327,7 +326,7 @@ for pdf_lst_here in cases:
     for i in range(m_dev):
         class_pred, conf, posts = predict(X_dev[i], pdf_lst_here)
         class_true = y_dev[i]
-        posts_list.extend([[posts[i], i+1, class_true] for i in range(3)])
+        posts_list.extend([[posts[j], j+1, class_true] for j in range(3)])
         conf_mat[class_true-1, class_pred-1] += 1
 
     posts_ll.append(posts_list)
