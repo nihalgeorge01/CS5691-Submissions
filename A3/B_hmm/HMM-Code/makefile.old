@@ -1,0 +1,36 @@
+# makefile for hidden Markov model code.
+# 
+
+CC = gcc  # use gnu C++ compiler
+#CC = CC # use SunOS C++ compiler
+
+CFLAGS = -c -O	 # optimize
+# CFLAGS = -c -O 
+# CFLAGS = -c -g # debug
+# CFLAGS = -c -pedantic -ansi # verify ANSI compliance
+
+all : train_hmm test_hmm generate_seq
+
+train_hmm : hmm.o train_hmm.o
+	$(CC) -o train_hmm hmm.o train_hmm.o -lm -lg++
+
+test_hmm : hmm.o test_hmm.o
+	$(CC) -o test_hmm hmm.o test_hmm.o -lm -lg++
+
+generate_seq : hmm.o generate_seq.o
+	$(CC) -o generate_seq generate_seq.o hmm.o -lm -lg++	
+
+train_hmm.o : train_hmm.cc hmm.h
+	$(CC) $(CFLAGS) train_hmm.cc
+
+test_hmm.o : test_hmm.cc hmm.h
+	$(CC) $(CFLAGS) test_hmm.cc
+
+generate_seq.o : generate_seq.cc hmm.h
+	$(CC) $(CFLAGS) generate_seq.cc 
+
+hmm.o : hmm.cc hmm.h 
+	$(CC) $(CFLAGS) hmm.cc 
+
+clean : 
+	rm -f *.o core *.seq *.seq.hmm *~
