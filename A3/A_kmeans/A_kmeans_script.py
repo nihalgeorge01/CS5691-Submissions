@@ -1,0 +1,1 @@
+# Assignment 3 Part A -- K-Means and GMM
