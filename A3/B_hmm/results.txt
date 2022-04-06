@@ -1,16 +1,16 @@
-/////////////////// RESULTS ///////////////////////
+//////////////////// RESULTS //////////////////////
 
 DTW MFCC ------------------------------------------
 
-CWRT                          --      100%
-Direct                        --      100%
+CWRT                          --      100%  **
+Direct                        --      100%  **
 
 DTW HWR -------------------------------------------
 
 CWRT only angle, bad diff     --      98%
 Direct, only angle, bad diff  --      98%
-CWRT only angle, good diff    --      97%
-Direct only angle, good diff  --      99%
+CWRT only angle, good diff    --      97%   **
+Direct only angle, good diff  --      99%   **
 CWRT, x,y mean,std normed     --      93%
 Direct, x,y mean,std normed   --      98%
 CWRT x,y                      --      73%
@@ -18,9 +18,10 @@ Direct x,y                    --      82%
 
 HMM MFCC ------------------------------------------
 
-K = 14,16,18,23               --      100%
+K = 14,16,18,23               --      100%  **
 
 HMM HWR -------------------------------------------
 
-K = 14                        --      98%
-K = 17,20                     --      99%
+Direct, K = 14                --      98%
+Direct, K = 17,20             --      99%   **
+Angle, Sym=5, State=10,11,12  --      99%   **

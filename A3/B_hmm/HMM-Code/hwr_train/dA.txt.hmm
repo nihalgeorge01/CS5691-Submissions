@@ -1,75 +1,75 @@
 states: 24
-symbols: 24
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+symbols: 5
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
--nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	-nan	
-0.000001	0.025984	0.063103	0.053452	0.064588	0.035635	0.048255	0.061618	0.065330	0.036377	0.046771	0.044543	0.053452	0.023756	0.014848	0.017075	0.017075	0.067558	0.064588	0.067558	0.017075	0.051225	0.017075	0.041574	0.001485	
+-nan	-nan	-nan	-nan	-nan	-nan	
+0.000001	0.248276	0.106897	0.286207	0.286207	0.072414	
 
 
