@@ -63,7 +63,7 @@ for i in [0,1,5,7,10]:
 
 for i in [0,1,5,7,10]:
     for j in np.logspace(-9,0,10):
-        plotter(x_train,y._train,i,j)    # plot them for different regularization parameters
+        plotter(x_train,y_train,i,j)    # plot them for different regularization parameters
 
 
 # Scatter Plot of best Performing Model vs Ground Truth

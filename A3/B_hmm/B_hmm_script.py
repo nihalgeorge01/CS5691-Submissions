@@ -233,7 +233,7 @@ print("Templates Built")
 # %%
 # Compute DTW error, get majority votes of top K, get class
 
-def plotConfMat(conf_mat, pr_type='', algo='', extra='', sf=2):
+def plotConfMat(conf_mat, sorted_cls, pr_type='', algo='', extra='', sf=2):
     # Plot confusion matrix
     sf = 2
     fig = plt.figure(figsize=(2.5*sf,2.5*sf))
@@ -298,7 +298,7 @@ def predictCWRT(train_mfcc, dev_mfcc, angle=False, pr_type=''):
     print(f"Acc: {acc}")
     print("Time taken: {:.4f} sec".format(t2-t1))
 
-    plotConfMat(conf_mat, pr_type, algo, extra=f'angle_{angle}')
+    plotConfMat(conf_mat, sorted_cls, pr_type, algo, extra=f'angle_{angle}')
 
     return posts_list
 
@@ -352,7 +352,7 @@ def predict(train_mfcc, dev_mfcc, angle=False, pr_type=''):
     print("Time taken: {:.4f} sec".format(t2-t1))
 
     # Plot confusion matrix
-    plotConfMat(conf_mat, pr_type, algo, extra=f'angle_{angle}')
+    plotConfMat(conf_mat, sorted_cls, pr_type, algo, extra=f'angle_{angle}')
 
     return posts_list
 
@@ -360,8 +360,8 @@ def predict(train_mfcc, dev_mfcc, angle=False, pr_type=''):
 # %%
 posts_list_CWRT = predictCWRT(train_mfcc, dev_mfcc, angle=False, pr_type=pr_type)
 posts_ll = {'cwrt_dtw':posts_list_CWRT}
-posts_list_direct = predict(train_mfcc, dev_mfcc, angle=False, pr_type=pr_type)
-posts_ll = {'cwrt_dtw':posts_list_CWRT, 'direct_dtw':posts_list_direct}
+# posts_list_direct = predict(train_mfcc, dev_mfcc, angle=False, pr_type=pr_type)
+# posts_ll = {'cwrt_dtw':posts_list_CWRT, 'direct_dtw':posts_list_direct}
 
 # %%
 # DTW Plots ROC, DET
@@ -434,7 +434,7 @@ def roc_det(posts_ll, cases, pr_type='', algo='', extra='', skip=1):
 
 # %%
 roc_det(posts_ll, ['cwrt_dtw'], pr_type, 'dtw', extra='sole_cwrt')
-roc_det(posts_ll, ['cwrt_dtw', 'direct_dtw'], pr_type, 'dtw')
+# roc_det(posts_ll, ['cwrt_dtw', 'direct_dtw'], pr_type, 'dtw')
 
 # %%
 # Online Handwritten Character Recognition
@@ -519,13 +519,13 @@ print("Templates Built")
 # %%
 posts_list_CWRT = predictCWRT(train_feats, dev_feats, angle=hwr_angle, pr_type=pr_type)
 posts_ll = {'cwrt_dtw':posts_list_CWRT}
-posts_list_direct = predict(train_feats, dev_feats, angle=hwr_angle, pr_type=pr_type)
-posts_ll = {'direct_dtw':posts_list_direct, 'cwrt_dtw':posts_list_CWRT}
+# posts_list_direct = predict(train_feats, dev_feats, angle=hwr_angle, pr_type=pr_type)
+# posts_ll = {'direct_dtw':posts_list_direct, 'cwrt_dtw':posts_list_CWRT}
 
 # %%
 # HWR DTW Plots
 roc_det(posts_ll, ['cwrt_dtw'], pr_type, 'dtw', extra=f'angle_{hwr_angle}_sole_cwrt')
-roc_det(posts_ll, ['cwrt_dtw', 'direct_dtw'], pr_type, 'dtw', extra=f'angle_{hwr_angle}')
+# roc_det(posts_ll, ['cwrt_dtw', 'direct_dtw'], pr_type, 'dtw', extra=f'angle_{hwr_angle}')
 
 # %%
 # Discrete HMM
@@ -806,7 +806,7 @@ for K in str_k_range:
     posts_ll[K] = posts_list_k.copy()
     
     # Plot Confusion Matrix
-    plotConfMat(conf_mat, pr_type, algo, extra=f'K_{K}_angle_{hwr_angle}')
+    plotConfMat(conf_mat, sorted_cls, pr_type, algo, extra=f'K_{K}_angle_{hwr_angle}')
 
 # %%
 # HWR HMM Plots (Acc vs k, ROC, DET)
@@ -935,7 +935,7 @@ for K in str_k_range:
     posts_ll[K] = posts_list_k.copy()
 
     # Plot Confusion Matrix
-    plotConfMat(conf_mat, pr_type, algo, extra=f'K_{K}')
+    plotConfMat(conf_mat, sorted_cls, pr_type, algo, extra=f'K_{K}')
 
 # %%
 # MFCC HMM Plots (Acc vs k, ROC, DET)
