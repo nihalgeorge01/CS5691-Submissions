@@ -20,7 +20,7 @@ def normalize_data(train_feats, dev_feats):
         for fn in train_feats[cl].keys():
             all_data = np.vstack((all_data, train_feats[cl][fn]))
         # all_data = np.vstack((all_data,np.reshape(train_feats[cl], [-1,feat_ct])))
-    print("all_data shape:", all_data.shape)
+    # print("all_data shape:", all_data.shape)
     mean_vec = np.mean(all_data, axis=0)
     std_vec = np.std(all_data, axis=0)
     
@@ -136,6 +136,8 @@ def preprocess_char(hwr_angle=True):
             if not hwr_angle:
                 feats_here = feats_here - np.mean(feats_here, axis=0)
                 feats_here = feats_here/np.sqrt(np.var(feats_here, axis=0))
+            else:
+                feats_here = np.reshape(feats_here, [-1,1])
 
             train_feats[cl][fn] = feats_here
         
@@ -150,14 +152,53 @@ def preprocess_char(hwr_angle=True):
             if not hwr_angle:
                 feats_here = feats_here - np.mean(feats_here, axis=0)
                 feats_here = feats_here/np.sqrt(np.var(feats_here, axis=0))
+            else:
+                feats_here = np.reshape(feats_here, [-1,1])
 
             dev_feats[cl][fn] = feats_here
 
     return train_feats, dev_feats
 
-def pca(train_feats, dev_feats, dims=1):
-    # TODO PCA
-    return train_feats, dev_feats
+def pca(train_feats, dev_feats, dims=100):
+    classes = sorted(list(train_feats.keys()))
+    cl0_fns = sorted(list(train_feats[classes[0]].keys()))
+    try:
+        feat_ct = train_feats[classes[0]][cl0_fns[0]].shape[1]
+    except IndexError:
+        feat_ct = train_feats[classes[0]][cl0_fns[0]].shape[0]
+
+    all_data = np.empty((0,feat_ct))
+    
+    # Get all data in one array
+    for cl in train_feats.keys():
+        for fn in train_feats[cl].keys():
+            # print("shape here:", train_feats[cl][fn].shape)
+            all_data = np.vstack((all_data, train_feats[cl][fn]))
+    
+    mean_vec = np.mean(all_data, axis=0)
+    centered_data = all_data - mean_vec
+    
+    # TODO cov vs. corr 
+    # cov_mat = np.cov(centered_data, rowvar=False)
+    cov_mat = np.corrcoef(centered_data, rowvar=False)
+    # print("cov_mat shape:", cov_mat.shape)
+    if len(cov_mat.shape) > 0 and cov_mat.shape[0] > 1:
+        e_vals, e_vecs = np.linalg.eig(cov_mat)
+        
+        # Sort eigenvalues and eigenvectors by magnitude
+        idx = np.abs(e_vals).argsort()[::-1]
+        e_vals = e_vals[idx][:dims]
+        e_vecs = e_vecs[idx][:,:dims]
+        
+        for cl in train_feats.keys():
+            for fn in train_feats[cl].keys():
+                train_feats[cl][fn] = (train_feats[cl][fn]-mean_vec) @ e_vecs
+                
+        for cl in dev_feats.keys():
+            for fn in dev_feats[cl].keys():
+                dev_feats[cl][fn] = (dev_feats[cl][fn]-mean_vec) @ e_vecs
+        
+    return train_feats,dev_feats
 
 def lda(train_feats, dev_feats, dims=1):
     # TODO LDA
