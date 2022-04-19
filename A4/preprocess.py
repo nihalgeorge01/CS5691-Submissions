@@ -188,7 +188,7 @@ def pca(train_feats, dev_feats, dims=100):
         # Sort eigenvalues and eigenvectors by magnitude
         idx = np.abs(e_vals).argsort()[::-1]
         e_vals = e_vals[idx][:dims]
-        e_vecs = e_vecs[idx][:,:dims]
+        e_vecs = e_vecs[:,idx][:,:dims]
         
         for cl in train_feats.keys():
             for fn in train_feats[cl].keys():
@@ -200,8 +200,100 @@ def pca(train_feats, dev_feats, dims=100):
         
     return train_feats,dev_feats
 
-def lda(train_feats, dev_feats, dims=1):
+# def fit(self, X, y):
+#     n_features = X.shape[1]
+#     class_labels = np.unique(y)
+
+#     # Within class scatter matrix:
+#     # SW = sum((X_c - mean_X_c)^2 )
+
+#     # Between class scatter:
+#     # SB = sum( n_c * (mean_X_c - mean_overall)^2 )
+
+#     mean_overall = np.mean(X, axis=0)
+#     SW = np.zeros((n_features, n_features))
+#     SB = np.zeros((n_features, n_features))
+#     for c in class_labels:
+#         X_c = X[y == c]
+#         mean_c = np.mean(X_c, axis=0)
+#         # (4, n_c) * (n_c, 4) = (4,4) -> transpose
+#         SW += (X_c - mean_c).T.dot((X_c - mean_c))
+
+#         # (4, 1) * (1, 4) = (4,4) -> reshape
+#         n_c = X_c.shape[0]
+#         mean_diff = (mean_c - mean_overall).reshape(n_features, 1)
+#         SB += n_c * (mean_diff).dot(mean_diff.T)
+
+#     # Determine SW^-1 * SB
+#     A = np.linalg.inv(SW).dot(SB)
+#     # Get eigenvalues and eigenvectors of SW^-1 * SB
+#     eigenvalues, eigenvectors = np.linalg.eig(A)
+#     # -> eigenvector v = [:,i] column vector, transpose for easier calculations
+#     # sort eigenvalues high to low
+#     eigenvectors = eigenvectors.T
+#     idxs = np.argsort(abs(eigenvalues))[::-1]
+#     eigenvalues = eigenvalues[idxs]
+#     eigenvectors = eigenvectors[idxs]
+#     # store first n eigenvectors
+#     self.linear_discriminants = eigenvectors[0:self.n_components]
+
+# def transform(self, X):
+#     # project data
+#     return np.dot(X, self.linear_discriminants.T)
+
+def lda(train_feats, dev_feats, dims=100):
     # TODO LDA
+    classes = sorted(list(train_feats.keys()))
+    cl0_fns = sorted(list(train_feats[classes[0]].keys()))
+    try:
+        feat_ct = train_feats[classes[0]][cl0_fns[0]].shape[1]
+    except IndexError:
+        feat_ct = train_feats[classes[0]][cl0_fns[0]].shape[0]
+
+    all_data = np.empty((0,feat_ct))
+
+    SW = np.zeros([feat_ct, feat_ct])
+    SB = np.zeros([feat_ct, feat_ct])
+
+    for cl in train_feats.keys():
+        for fn in train_feats[cl].keys():
+            all_data = np.vstack((all_data, train_feats[cl][fn]))
+        # all_data = np.vstack((all_data,np.reshape(train_feats[cl], [-1,feat_ct])))
+    # print("all_data shape:", all_data.shape)
+    mean_all = np.mean(all_data, axis=0)
+    std_all = np.std(all_data, axis=0)
+
+    cl_means = {}
+    for cl in classes:
+        # find class mean
+        cl_data = np.empty([0, feat_ct])
+        fns = sorted(list(train_feats[cl].keys()))
+        for fn in fns:
+            cl_data = np.vstack((cl_data, train_feats[cl][fn]))
+        cl_means[cl] = np.mean(cl_data, axis=0)
+
+        SW += (cl_data-cl_means[cl]).T @ (cl_data-cl_means[cl])
+        
+        fn_ct = cl_data.shape[0]
+        mean_sep = (cl_means[cl] - mean_all)
+        SB += fn_ct * np.dot(mean_sep, mean_sep)
+    
+    swi_sb = np.linalg.inv(SW) @ SB
+
+    e_vals, e_vecs = np.linalg.eig(swi_sb)
+
+    idx = np.argsort(abs(e_vals))[::-1]
+    e_vals = e_vals[idx][:dims]
+    e_vecs = e_vecs[:,idx][:, :dims]
+
+    for cl in sorted(list(train_feats.keys())):
+        for fn in sorted(list(train_feats[cl].keys())):
+            train_feats[cl][fn] = train_feats[cl][fn] @ e_vecs
+
+    for cl in sorted(list(dev_feats.keys())):
+        for fn in sorted(list(dev_feats[cl].keys())):
+            dev_feats[cl][fn] = dev_feats[cl][fn] @ e_vecs
+
     return train_feats, dev_feats
 
 def raw(train_feats, dev_feats):
