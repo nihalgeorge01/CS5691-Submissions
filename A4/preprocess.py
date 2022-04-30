@@ -200,47 +200,6 @@ def pca(train_feats, dev_feats, dims=100):
         
     return train_feats,dev_feats
 
-# def fit(self, X, y):
-#     n_features = X.shape[1]
-#     class_labels = np.unique(y)
-
-#     # Within class scatter matrix:
-#     # SW = sum((X_c - mean_X_c)^2 )
-
-#     # Between class scatter:
-#     # SB = sum( n_c * (mean_X_c - mean_overall)^2 )
-
-#     mean_overall = np.mean(X, axis=0)
-#     SW = np.zeros((n_features, n_features))
-#     SB = np.zeros((n_features, n_features))
-#     for c in class_labels:
-#         X_c = X[y == c]
-#         mean_c = np.mean(X_c, axis=0)
-#         # (4, n_c) * (n_c, 4) = (4,4) -> transpose
-#         SW += (X_c - mean_c).T.dot((X_c - mean_c))
-
-#         # (4, 1) * (1, 4) = (4,4) -> reshape
-#         n_c = X_c.shape[0]
-#         mean_diff = (mean_c - mean_overall).reshape(n_features, 1)
-#         SB += n_c * (mean_diff).dot(mean_diff.T)
-
-#     # Determine SW^-1 * SB
-#     A = np.linalg.inv(SW).dot(SB)
-#     # Get eigenvalues and eigenvectors of SW^-1 * SB
-#     eigenvalues, eigenvectors = np.linalg.eig(A)
-#     # -> eigenvector v = [:,i] column vector, transpose for easier calculations
-#     # sort eigenvalues high to low
-#     eigenvectors = eigenvectors.T
-#     idxs = np.argsort(abs(eigenvalues))[::-1]
-#     eigenvalues = eigenvalues[idxs]
-#     eigenvectors = eigenvectors[idxs]
-#     # store first n eigenvectors
-#     self.linear_discriminants = eigenvectors[0:self.n_components]
-
-# def transform(self, X):
-#     # project data
-#     return np.dot(X, self.linear_discriminants.T)
-
 def lda(train_feats, dev_feats, dims=100):
     # TODO LDA
     classes = sorted(list(train_feats.keys()))
@@ -296,6 +255,30 @@ def lda(train_feats, dev_feats, dims=100):
 
     return train_feats, dev_feats
 
+def datadict2np(feats):
+    classes = sorted(list(feats.keys()))
+    cl2ind = {classes[i]:i for i in range(len(classes))}
+    cl0_fns = sorted(list(feats[classes[0]].keys()))
+    feat_shape = feats[classes[0]][cl0_fns[0]].shape
+    if len(feat_shape) in [1,2]:
+        feat_ct = np.prod(feat_shape)
+    else:
+        print("Feature shape unexpected, stopping")
+        assert False
+
+    X = np.empty([0,feat_ct])
+    y = np.empty([0,1])
+    if len(feat_shape) == 1:
+        for cl in classes:
+            cl_here = cl2ind[cl]
+            fns = sorted(list(feats[cl].keys()))
+            for fn in fns:
+                feats_here = feats[cl][fn].reshape([1,-1])
+                X = np.vstack((X, feats_here))
+                y = np.vstack((y, cl_here))
+    
+    return X,y
+
 def raw(train_feats, dev_feats):
     return train_feats, dev_feats
 
@@ -320,5 +303,20 @@ if __name__ == '__main__':
             
             with open(f'./Data/Pickles/{pr}_{algo}_dev.pkl', 'wb') as f:
                 save_feats(dev_feats, f)
+
+            X_train, y_train = datadict2np(train_feats)
+            X_dev, y_dev = datadict2np(dev_feats)
+            
+            with open(f'./Data/Pickles/{pr}_{algo}_train_np_X.pkl', 'wb') as f:
+                save_feats(X_train, f)
+
+            with open(f'./Data/Pickles/{pr}_{algo}_train_np_y.pkl', 'wb') as f:
+                save_feats(y_train, f)
+            
+            with open(f'./Data/Pickles/{pr}_{algo}_dev_np_X.pkl', 'wb') as f:
+                save_feats(X_dev, f)
+            
+            with open(f'./Data/Pickles/{pr}_{algo}_dev_np_y.pkl', 'wb') as f:
+                save_feats(y_dev, f)
 
             print(f"Preprocessed {algo} {pr}")

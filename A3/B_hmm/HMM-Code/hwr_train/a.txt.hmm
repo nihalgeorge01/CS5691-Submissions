@@ -1,27 +1,75 @@
-states: 8
+states: 24
 symbols: 5
-0.581119	0.411482	0.000001	0.459575	0.011832	0.117111	
-0.418881	0.228494	0.104835	0.000107	0.076622	0.589941	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
-0.682445	0.079880	0.000001	0.000001	0.000205	0.919914	
-0.317555	0.000001	0.160043	0.014494	0.825463	0.000001	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
-0.631550	0.000001	0.285634	0.000001	0.590383	0.123983	
-0.368450	0.000001	0.380028	0.000001	0.532866	0.087106	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
-0.895118	0.000001	0.960496	0.039503	0.000001	0.000001	
-0.104882	0.000001	0.000001	0.999999	0.000001	0.000001	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
-0.932661	0.321846	0.018942	0.636760	0.000001	0.022452	
-0.067339	0.971306	0.000001	0.000001	0.000001	0.028693	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
-0.924563	0.047778	0.006455	0.001432	0.357148	0.587187	
-0.075437	0.000001	0.000001	0.000001	1.000000	0.000001	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
-0.888824	0.000001	0.945666	0.000001	0.054334	0.000001	
-0.111176	0.000001	0.998813	0.001187	0.000001	0.000001	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
 
-1.000000	0.059676	0.406042	0.523993	0.000001	0.010289	
-0.000001	0.340164	0.081967	0.102459	0.204918	0.270492	
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+
+-nan	-nan	-nan	-nan	-nan	-nan	
+-nan	-nan	-nan	-nan	-nan	-nan	
+
+-nan	-nan	-nan	-nan	-nan	-nan	
+0.000001	0.248276	0.106897	0.286207	0.286207	0.072414	
 
 

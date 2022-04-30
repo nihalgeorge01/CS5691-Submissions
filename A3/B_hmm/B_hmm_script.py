@@ -9,6 +9,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 import subprocess
+import scipy.stats as spst
+import sklearn.metrics
 
 from collections import Counter
 
@@ -409,6 +411,23 @@ def roc_det(posts_ll, cases, pr_type='', algo='', extra='', skip=1):
         if c_id%skip == 0:
             ax1.plot(fpr, tpr)
             ax2.plot(fpr, fnr)
+            # ax2.plot(spst.norm.ppf(fpr), spst.norm.ppf(fnr))
+            display = sklearn.metrics.DetCurveDisplay(fpr=fpr, fnr=fnr)
+
+    
+    # ticks = [0.001, 0.01, 0.05, 0.20, 0.5, 0.80, 0.95, 0.99, 0.999]
+    # tick_locations = spst.norm.ppf(ticks)
+    # tick_labels = [
+    #     "{:.0%}".format(s) if (100 * s).is_integer() else "{:.1%}".format(s)
+    #     for s in ticks
+    # ]
+    # ax2.set_xticks(tick_locations)
+    # ax2.set_xticklabels(tick_labels)
+    # ax2.set_xlim(-3, 3)
+    # ax2.set_yticks(tick_locations)
+    # ax2.set_yticklabels(tick_labels)
+    # ax2.set_ylim(-3, 3)
+
     ax1.legend(cases[::skip])
     ax2.legend(cases[::skip])
     ax1.set_xlabel('False Positive Rate (FPR)')
@@ -430,6 +449,10 @@ def roc_det(posts_ll, cases, pr_type='', algo='', extra='', skip=1):
 
     fig1.savefig(f"./Plots/ROC_{pr_type}_{algo}_{extra}.png")
     fig2.savefig(f"./Plots/DET_{pr_type}_{algo}_{extra}.png")
+    plt.show()
+
+    plt.figure()
+    display.plot()
     plt.show()
 
 # %%
@@ -457,7 +480,7 @@ def loadHW(path, angle=False):
 # %%
 letters = ['a', 'ai', 'bA', 'chA', 'dA']
 pr_type='hwr'
-hwr_angle = False
+hwr_angle = True
 
 # Load Train and Dev
 
