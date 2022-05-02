@@ -12,6 +12,8 @@
 
 # Imports
 import numpy as np
+import pickle as pkl
+# from scipy.special import softmax
 
 # Constants
 INF = 9999999999
@@ -19,8 +21,8 @@ INF = 9999999999
 def sigmoid(x):
     return 1/(1+np.exp(-x))
 
-def softmax(v):
-    return np.exp(-v)/np.sum(np.exp(-v), axis=1)
+def softmax(v, axis=1):
+    return np.exp(v)/np.sum(np.exp(v), axis=1).reshape([-1,1])
 
 def label2onehot(y_l):
     classes = sorted(list(np.unique(y_l)))
@@ -31,15 +33,16 @@ def label2onehot(y_l):
 
     y_o = np.zeros([M, cl_ct])
     for i in range(M):
-        y_o[i, cl2ind[y_l[i]]] = 1
+        y_o[i, cl2ind[y_l[i,0]]] = 1
     
+    print("y_o shape:", y_o.shape)
     return y_o
 
 class MulticlassLR():
     def __init__(self):
         self.W = None
 
-    def fit(self, X_train, y_train, iter_ct = 1000, lr = 0.1, reg = 0.001):
+    def fit(self, X_train, y_train, iter_ct = 1000, lr = 0.001, reg = 0):
         # Make one-hot encoding for classes (for OvA crossentropy)
         y_train_o = label2onehot(y_train)
         cl_ct = y_train_o.shape[1]
@@ -48,7 +51,8 @@ class MulticlassLR():
         # Define hypothesis Wx. Zero initialisation
         W = np.zeros([X_train.shape[1], cl_ct])
         Z = - X_train @ W
-        Z_s = softmax(Z)
+        # Z_s = softmax(Z)
+        Z_s = softmax(Z, axis=1)
         loss_here = (1/M) * (np.trace(X_train @ W @ y_train_o.T) + np.sum(np.log(np.sum(np.exp(Z), axis=1))))
         losses = [loss_here]
         # Gradient descent iterations
@@ -60,24 +64,58 @@ class MulticlassLR():
             Z = - X_train @ W
             Z_s = softmax(Z)
         
+        print("losses:", losses[:10])
         self.W = W
 
     def predict(self, X_dev):
         Z = - X_dev @ self.W
         Z_s = softmax(Z)
         y_pred = np.argmax(Z_s, axis=1)
-        return y_pred
+        return y_pred.reshape([-1,1])
 
     def get_acc(self, X_dev, y_dev):
         y_pred = self.predict(X_dev)
+        print("y_pred shape:", y_pred.shape)
+        print("y_pred unique vals:", np.unique(y_pred))
+        print("y_dev shape:", y_dev.shape)
         correct = np.sum(y_pred == y_dev)
         tot = y_pred.shape[0]
         acc = correct/tot
         return acc
 
 if __name__ == "__main__":
-    pass
+    algos = ['raw', 'pca', 'lda']
+    pr_types = ['synth', 'image']
+    
 
+    for pr in pr_types:
+        for algo in algos:
+            model = MulticlassLR()
+
+            print(f"\n\n Starting LogReg testing on {algo} {pr} ... \n\n")
+            with open(f'./Data/Pickles/{pr}_{algo}_train_np_X.pkl', 'rb') as f:
+                X_train = pkl.load(f)
+
+            with open(f'./Data/Pickles/{pr}_{algo}_train_np_y.pkl', 'rb') as f:
+                y_train = pkl.load(f)
+            
+            with open(f'./Data/Pickles/{pr}_{algo}_dev_np_X.pkl', 'rb') as f:
+                X_dev = pkl.load(f)
+            
+            with open(f'./Data/Pickles/{pr}_{algo}_dev_np_y.pkl', 'rb') as f:
+                y_dev = pkl.load(f)
+            
+            if pr == 'synth' and algo == 'raw':
+                #X_train = np.hstack([np.sqrt(np.sum(X_train**2, axis=1)).reshape([-1,1]), np.at
+                _ = 1
+
+            print("X_train y_train shapes:", X_train.shape, y_train.shape)
+            model.fit(X_train, y_train)
+            acc_tot = model.get_acc(X_dev, y_dev)
+
+            print(f"\n\n Overall Acc on {algo} {pr}: {acc_tot}\n\n")
+
+            print(f"\n\n Finished LogReg testing on {algo} {pr} \n\n")
 # import numpy as np
 # import pandas as pd
 # from sklearn.preprocessing import OneHotEncoder
@@ -112,7 +150,7 @@ if __name__ == "__main__":
 #     step_lst = [] 
 #     loss_lst = []
 #     W_lst = []
- 
+
 #     while step < max_iter:
 #         step += 1
 #         W -= eta * gradient(X, Y_onehot, W, mu)
@@ -126,7 +164,7 @@ if __name__ == "__main__":
 #     })
 #     return df, W
 
-# class Multiclass:
+# class MulticlassLR:
 #     def fit(self, X, Y):
 #         self.loss_steps, self.W = gradient_descent(X, Y)
 
@@ -147,7 +185,7 @@ if __name__ == "__main__":
 # Y = load_iris().target
 
 # # fit model
-# model = Multiclass()
+# model = MulticlassLR()
 # model.fit(X, Y)
 
 # # plot loss

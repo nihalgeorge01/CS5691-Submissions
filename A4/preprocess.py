@@ -69,6 +69,7 @@ def preprocess_image(norm=False):
     if norm:
         train_feats, dev_feats = normalize_data(train_feats, dev_feats)
 
+    # print(train_feats["coast"]["coast_arnat59"].shape)
     return train_feats, dev_feats
 
 def preprocess_digit():
@@ -218,10 +219,10 @@ def lda(train_feats, dev_feats, dims=100):
         for fn in train_feats[cl].keys():
             all_data = np.vstack((all_data, train_feats[cl][fn]))
         # all_data = np.vstack((all_data,np.reshape(train_feats[cl], [-1,feat_ct])))
-    # print("all_data shape:", all_data.shape)
+    print("all_data shape:", all_data.shape)
     mean_all = np.mean(all_data, axis=0)
     std_all = np.std(all_data, axis=0)
-
+    mean_sep = None
     cl_means = {}
     for cl in classes:
         # find class mean
@@ -235,19 +236,26 @@ def lda(train_feats, dev_feats, dims=100):
         
         fn_ct = cl_data.shape[0]
         mean_sep = (cl_means[cl] - mean_all)
-        SB += fn_ct * np.dot(mean_sep, mean_sep)
-    
-    swi_sb = np.linalg.inv(SW) @ SB
+        SB += fn_ct * (mean_sep.T @ mean_sep)
 
+    print("mean sep shape:", mean_sep.shape)
+    print("Symm? : ", np.allclose(swi_sb, swi_sb.T, rtol=1e-4))
+    print("Symm? : ", np.allclose(swi_sb, swi_sb.T, rtol=1e-4))
+    swi_sb = np.linalg.inv(SW) @ SB
+    print("Symm? : ", np.allclose(swi_sb, swi_sb.T, rtol=1e-4))
     e_vals, e_vecs = np.linalg.eig(swi_sb)
+    print("e_vals dtype:", e_vals.dtype)
+    print("e_vecs dtype:", e_vecs.dtype)
 
     idx = np.argsort(abs(e_vals))[::-1]
     e_vals = e_vals[idx][:dims]
     e_vecs = e_vecs[:,idx][:, :dims]
 
+    print("e_vecs shape:", e_vecs.shape)
     for cl in sorted(list(train_feats.keys())):
         for fn in sorted(list(train_feats[cl].keys())):
             train_feats[cl][fn] = train_feats[cl][fn] @ e_vecs
+            
 
     for cl in sorted(list(dev_feats.keys())):
         for fn in sorted(list(dev_feats[cl].keys())):
@@ -277,6 +285,17 @@ def datadict2np(feats):
                 X = np.vstack((X, feats_here))
                 y = np.vstack((y, cl_here))
     
+    elif len(feat_shape) == 2:
+        for cl in classes:
+            cl_here = cl2ind[cl]
+            fns = sorted(list(feats[cl].keys()))
+            for fn in fns:
+                feats_here = feats[cl][fn].reshape([1,-1])
+                X = np.vstack((X, feats_here))
+                y = np.vstack((y, cl_here))
+
+    print("X shape:", X.shape)
+    print("y shape:", y.shape)
     return X,y
 
 def raw(train_feats, dev_feats):
@@ -290,10 +309,8 @@ def save_feats(feats, fp):
 
 if __name__ == '__main__':
     algos = ['raw', 'pca', 'lda']
-    pr_types = ['synth', 'image', 'digit', 'char']
-
-    # pr_type = 'synth'
-    # algo = 'raw'
+    # pr_types = ['synth', 'image', 'digit', 'char']
+    pr_types = ['synth', 'image']
 
     for pr in pr_types:
         for algo in algos:
