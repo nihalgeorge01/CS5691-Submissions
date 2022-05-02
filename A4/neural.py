@@ -18,7 +18,7 @@ def make_meshgrid(x, y, h=0.1):
     return xx, yy
 
 optimizer = "adam"
-alpha = 1e-6
+alpha = 1e-3
 hidden_layer = (30,25,20)
 
 if __name__ == "__main__":
@@ -44,7 +44,7 @@ if __name__ == "__main__":
             preds = classifier.predict(X_dev)
             errs = preds - y_dev
             mistakes = np.count_nonzero(errs)
-            print(f"Misclassifications: {mistakes} in {len(preds)}")
+            #print(f"Misclassifications: {mistakes} in {len(preds)}")
             acc = 1 - mistakes/(len(y_dev))
             print(f"{algo}'s accuracy on {pr} = {acc*100:.2f}%")
             if False:#pr == "synth":
@@ -74,7 +74,7 @@ if __name__ == "__main__":
                 preds = classifier.predict(X_dev)
                 errs = preds - y_dev
                 mistakes = np.count_nonzero(errs)
-                print(f"Misclassifications: {mistakes} in {len(preds)}")
+                #print(f"Misclassifications: {mistakes} in {len(preds)}")
                 acc = 1 - mistakes/(len(y_dev))
                 s = "padding" if rect=="pad_length" else "resampling"
                 print(f"{algo}'s accuracy on {pr} with {s} = {acc*100:.2f}%")
