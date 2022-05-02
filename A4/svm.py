@@ -19,7 +19,7 @@ def make_meshgrid(x, y, h=0.1):
 
 if __name__ == "__main__":
     algos = ["raw","pca","lda"]
-    pr_types = ['synth', 'image', 'char', 'digit']
+    pr_types = ['synth', 'image']
     # Support Vector Machines On Synthetic Data
     for pr in pr_types:
         for algo in algos:
@@ -39,7 +39,7 @@ if __name__ == "__main__":
             preds = classifier.predict(X_dev)
             errs = preds - y_dev
             mistakes = np.count_nonzero(errs)
-            print(f"Misclassifications: {mistakes}")
+            print(f"Misclassifications: {mistakes} in {len(preds)}")
             acc = 1 - mistakes/(len(y_dev))
             print(f"{algo}'s accuracy on {pr} = {acc*100:.2f}%")
             if pr == "synth":
@@ -48,3 +48,28 @@ if __name__ == "__main__":
                 plt.scatter(X_dev[:500,0],X_dev[:500,1])
                 plt.scatter(X_dev[500:,0],X_dev[500:,1])
                 plt.show()
+    pr_types = ["char", "digit"]
+    rect_types = ["pad_length", "resample"]
+    for pr in pr_types:
+        for algo in algos:
+            for rect in rect_types:
+                # Loading Data
+                with open(f"Data/Pickles/{pr}_{algo}_{rect}_train_np_X.pkl","rb") as f:
+                    X_train = pickle.load(f)
+                with open(f"Data/Pickles/{pr}_{algo}_{rect}_train_np_y.pkl","rb") as f:
+                    y_train = np.squeeze(pickle.load(f))
+                with open(f"Data/Pickles/{pr}_{algo}_{rect}_dev_np_X.pkl","rb") as f:
+                    X_dev = pickle.load(f)
+                with open(f"Data/Pickles/{pr}_{algo}_{rect}_dev_np_y.pkl","rb") as f:
+                    y_dev = np.squeeze(pickle.load(f))
+                classifier = make_pipeline(StandardScaler(), svm.SVC(C=1e7, kernel="rbf", gamma="auto"))
+
+                # Fit the data to X and y
+                classifier.fit(X_train,y_train)
+                preds = classifier.predict(X_dev)
+                errs = preds - y_dev
+                mistakes = np.count_nonzero(errs)
+                print(f"Misclassifications: {mistakes} in {len(preds)}")
+                acc = 1 - mistakes/(len(y_dev))
+                s = "padding" if rect=="pad_length" else "resampling"
+                print(f"{algo}'s accuracy on {pr} with {s} = {acc*100:.2f}%")
