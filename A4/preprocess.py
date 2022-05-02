@@ -35,6 +35,26 @@ def normalize_data(train_feats, dev_feats):
 
     return train_feats, dev_feats
 
+def transform_length(train_feats, dev_feats, dest_frames=200):
+    # Transform time series data into equal number of frames
+    # Method: Find fourier coeffs, then extrapolate to longer length
+
+    for cl in sorted(list(train_feats.keys())):
+        for fn in sorted(list(train_feats[cl].keys())):
+            feats_here = train_feats[cl][fn]
+            last_row = feats_here[-1,:]
+            row_ct = feats_here.shape[0]
+            train_feats[cl][fn] = np.vstack([feats_here, np.tile(last_row, (dest_frames-row_ct,1))])
+    
+    for cl in sorted(list(dev_feats.keys())):
+        for fn in sorted(list(dev_feats[cl].keys())):
+            feats_here = dev_feats[cl][fn]
+            last_row = feats_here[-1,:]
+            row_ct = feats_here.shape[0]
+            dev_feats[cl][fn] = np.vstack([feats_here, np.tile(last_row, (dest_frames-row_ct,1))])
+    
+    return train_feats, dev_feats
+
 def preprocess_synth():
     
     classes = [1,2]
@@ -98,6 +118,7 @@ def preprocess_digit():
             fn = fp.split('.')[0]
             dev_feats[cl][fn] = np.loadtxt(dev_path+fp, skiprows=1)
 
+    train_feats, dev_feats = transform_length(train_feats, dev_feats)
     return train_feats, dev_feats
 
 def loadHW(path, angle=False):
@@ -158,7 +179,7 @@ def preprocess_char(hwr_angle=True):
                 feats_here = np.reshape(feats_here, [-1,1])
 
             dev_feats[cl][fn] = feats_here
-
+    train_feats, dev_feats = transform_length(train_feats, dev_feats)
     return train_feats, dev_feats
 
 def pca(train_feats, dev_feats, dims=100):
@@ -311,8 +332,8 @@ def save_feats(feats, fp):
 
 if __name__ == '__main__':
     algos = ['raw', 'pca', 'lda']
-    # pr_types = ['synth', 'image', 'digit', 'char']
-    pr_types = ['synth', 'image']
+    pr_types = ['synth', 'image', 'digit', 'char']
+    # pr_types = ['synth', 'image']
 
     for pr in pr_types:
         for algo in algos:
