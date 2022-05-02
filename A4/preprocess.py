@@ -225,9 +225,29 @@ def pca(train_feats, dev_feats, dims=100):
         
         # Sort eigenvalues and eigenvectors by magnitude
         idx = np.abs(e_vals).argsort()[::-1]
-        e_vals = e_vals[idx][:dims]
-        e_vecs = e_vecs[:,idx][:,:dims]
+
+        e_vals = e_vals[idx]
+        e_vecs = e_vecs[:,idx]
         
+        # Take eigenvalues till they contain 90% of energy
+        e_t = 0.99
+        energy_here = 0
+        energy_tot = np.sum(np.abs(e_vals))
+        energy_req = e_t * energy_tot
+        
+        ct = 0
+        for v in e_vals:
+            energy_here += np.abs(v)
+            ct += 1
+            if energy_here > energy_req:
+                dims = ct 
+                break
+        
+        print("Dims considered:", dims)
+
+        e_vals = e_vals[:dims]
+        e_vecs = e_vecs[:,:dims]
+
         for cl in train_feats.keys():
             for fn in train_feats[cl].keys():
                 train_feats[cl][fn] = (train_feats[cl][fn]-mean_vec) @ e_vecs

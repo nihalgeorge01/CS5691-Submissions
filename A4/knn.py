@@ -258,7 +258,6 @@ def knn(train_feats, dev_feats, distfun=euclidean, k=5):
             total += 1
     acc = correct/total
     return acc
-    
 
 def distfun_choice(pr_type):
     if pr_type == 'synth':
@@ -274,9 +273,13 @@ def distfun_choice(pr_type):
         return None
 
 if __name__ == "__main__":
-    algos = ['raw', 'pca', 'lda']
+    
+    algos = ['pca']
+    # algos = ['raw', 'pca', 'lda']
     pr_types = ['synth', 'image', 'digit', 'char']
-    # pr_types = ['char', 'digit']
+    
+    resize_methods = ['resample']
+    # resize_methods = ['resample', 'pad_length']
     multhread = False
 
     if multhread:
@@ -316,18 +319,40 @@ if __name__ == "__main__":
 
     else:
         # Single thread
-        for k in range(1,20):
-            print(f"\n\nStarting k={k} ... \n\n")
-            for pr in pr_types:
-                for algo in algos:
-                    print(f"\nStarting KNN testing on {algo} {pr} ...")
-                    with open(f'./Data/Pickles/{pr}_{algo}_train.pkl', 'rb') as f:
-                        train_feats = pkl.load(f)
-                    
-                    with open(f'./Data/Pickles/{pr}_{algo}_dev.pkl', 'rb') as f:
-                        dev_feats = pkl.load(f)
-                    
-                    acc_tot = knn(train_feats, dev_feats, distfun_choice(pr), k=10)
-                    print(f"Overall Acc on {algo} {pr}: {acc_tot}")
+        # pr_types = ['synth']
+        # k_range = [1,2,3]
+        k_range = [1,2,3,5,7,10,15,20]
+        
+            # print(f"\n\nStarting k={k} ... \n\n")
+        acc_pr = {k:None for k in pr_types}
+        for pr in pr_types:
+            acc_v_k_here = []
+            for algo in algos:
+                for rm in resize_methods:
+                    for k in k_range:
+                        prefix = f'{pr}_{algo}'
+                        if pr in ['digit', 'char']:
+                            prefix += f'_{rm}'
+                        print(f"\nStarting KNN testing on k={k}, {prefix} ...")
+                        with open(f'./Data/Pickles/{prefix}_train.pkl', 'rb') as f:
+                            train_feats = pkl.load(f)
+                        
+                        with open(f'./Data/Pickles/{prefix}_dev.pkl', 'rb') as f:
+                            dev_feats = pkl.load(f)
+                        
+                        acc_tot = knn(train_feats, dev_feats, distfun_choice(pr), k=k)
+                        print(f"Overall Acc on k={k}, {prefix} : {acc_tot}")
+                        acc_v_k_here.append(acc_tot)
+                        print(f"Finished KNN testing on k={k}, {prefix} \n")
+            
+            acc_pr[pr] = acc_v_k_here.copy()
 
-                    print(f"Finished KNN testing on {algo} {pr} \n")
+    # Plot acc vs k for each dataset
+    plt.figure()
+    for pr in pr_types:
+        plt.plot(k_range, acc_pr[pr])
+    
+    plt.legend(pr_types)
+    plt.title('Acc vs k for Different Datasets')
+    plt.savefig('./Plots/KNN_Acc_vs_k_all.png')
+    plt.show()

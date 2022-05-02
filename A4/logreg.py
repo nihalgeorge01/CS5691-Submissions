@@ -88,7 +88,7 @@ class MulticlassLR():
 
 if __name__ == "__main__":
     algos = ['raw', 'pca', 'lda']
-    pr_types = ['synth']
+    pr_types = ['image']
     resize_methods = ['resample', 'pad_length']
     # pr_types = ['synth', 'image', 'char', 'digit']
 
