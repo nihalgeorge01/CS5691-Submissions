@@ -19,6 +19,9 @@ def make_meshgrid(x, y, h=0.1):
     xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
     return xx, yy
 
+C = 1e7
+kernel = "rbf"
+
 if __name__ == "__main__":
     algos = ["raw","pca","lda"]
     pr_types = ['synth', 'image']
@@ -37,7 +40,7 @@ if __name__ == "__main__":
                 X_dev = pickle.load(f)
             with open(f"Data/Pickles/{pr}_{algo}_dev_np_y.pkl","rb") as f:
                 y_dev = np.squeeze(pickle.load(f))
-            classifier = make_pipeline(StandardScaler(), svm.SVC(C=1e7, kernel="rbf", gamma="auto"))
+            classifier = make_pipeline(StandardScaler(), svm.SVC(C=C, kernel=kernel, gamma="auto"))
 
             # Fit the data to X and y
             classifier.fit(X_train,y_train)
@@ -52,7 +55,7 @@ if __name__ == "__main__":
             print(f"Misclassifications: {mistakes} in {len(preds)}")
             acc = 1 - mistakes/(len(y_dev))
             print(f"{algo}'s accuracy on {pr} = {acc*100:.2f}%")
-            if pr == "synth":
+            if False:#pr == "synth":
                 x_plot, y_plot = make_meshgrid(X_train[:,0], X_train[:,1])
                 contour_plot(classifier,x_plot,y_plot)
                 plt.scatter(X_dev[:500,0],X_dev[:500,1])
@@ -73,7 +76,7 @@ if __name__ == "__main__":
                     X_dev = pickle.load(f)
                 with open(f"Data/Pickles/{pr}_{algo}_{rect}_dev_np_y.pkl","rb") as f:
                     y_dev = np.squeeze(pickle.load(f))
-                classifier = make_pipeline(StandardScaler(), svm.SVC(C=1e7, kernel="rbf", gamma="auto"))
+                classifier = make_pipeline(StandardScaler(), svm.SVC(C=C, kernel=kernel, gamma="auto"))
 
                 # Fit the data to X and y
                 classifier.fit(X_train,y_train)

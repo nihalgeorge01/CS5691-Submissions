@@ -17,6 +17,10 @@ def make_meshgrid(x, y, h=0.1):
     xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
     return xx, yy
 
+optimizer = "adam"
+alpha = 1e-6
+hidden_layer = (30,25,20)
+
 if __name__ == "__main__":
     
     algos = ["raw","pca","lda"]
@@ -33,7 +37,7 @@ if __name__ == "__main__":
                 X_dev = pickle.load(f)
             with open(f"Data/Pickles/{pr}_{algo}_dev_np_y.pkl","rb") as f:
                 y_dev = np.squeeze(pickle.load(f))
-            classifier = make_pipeline(StandardScaler(), nn.MLPClassifier(solver='adam', alpha=1e-6,hidden_layer_sizes=(30, 25, 20), random_state=5, max_iter=1000))
+            classifier = make_pipeline(StandardScaler(), nn.MLPClassifier(solver=optimizer, alpha=alpha, hidden_layer_sizes=hidden_layer, random_state=5, max_iter=1000))
 
             # Fit the data to X and y
             classifier.fit(X_train,y_train)
@@ -43,7 +47,7 @@ if __name__ == "__main__":
             print(f"Misclassifications: {mistakes} in {len(preds)}")
             acc = 1 - mistakes/(len(y_dev))
             print(f"{algo}'s accuracy on {pr} = {acc*100:.2f}%")
-            if pr == "synth":
+            if False:#pr == "synth":
                 x_plot, y_plot = make_meshgrid(X_train[:,0], X_train[:,1])
                 contour_plot(classifier,x_plot,y_plot)
                 plt.scatter(X_dev[:500,0],X_dev[:500,1])
@@ -63,7 +67,7 @@ if __name__ == "__main__":
                     X_dev = pickle.load(f)
                 with open(f"Data/Pickles/{pr}_{algo}_{rect}_dev_np_y.pkl","rb") as f:
                     y_dev = np.squeeze(pickle.load(f))
-                classifier = make_pipeline(StandardScaler(), nn.MLPClassifier(solver='adam', alpha=1e-6,hidden_layer_sizes=(30, 25, 20), random_state=5, max_iter=1000))
+                classifier = make_pipeline(StandardScaler(), nn.MLPClassifier(solver=optimizer, alpha=alpha, hidden_layer_sizes=hidden_layer, random_state=5, max_iter=1000))
 
                 # Fit the data to X and y
                 classifier.fit(X_train,y_train)
