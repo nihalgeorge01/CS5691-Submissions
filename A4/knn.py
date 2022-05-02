@@ -221,8 +221,8 @@ def distfun_choice(pr_type):
 
 if __name__ == "__main__":
     algos = ['raw', 'pca', 'lda']
-    # pr_types = ['synth', 'image', 'digit', 'char']
-    pr_types = ['char', 'digit']
+    pr_types = ['synth', 'image', 'digit', 'char']
+    # pr_types = ['char', 'digit']
     multhread = False
 
     if multhread:

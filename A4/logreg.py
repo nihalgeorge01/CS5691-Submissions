@@ -13,6 +13,8 @@
 # Imports
 import numpy as np
 import pickle as pkl
+
+from knn import roc_det
 # from scipy.special import softmax
 
 # Constants
@@ -70,24 +72,24 @@ class MulticlassLR():
     def predict(self, X_dev):
         Z = - X_dev @ self.W
         Z_s = softmax(Z)
-        y_pred = np.argmax(Z_s, axis=1)
-        return y_pred.reshape([-1,1])
+        y_pred = np.argmax(Z_s, axis=1).reshape([-1,1])
+        return y_pred, Z_s
 
     def get_acc(self, X_dev, y_dev):
-        y_pred = self.predict(X_dev)
+        y_pred, Z_s = self.predict(X_dev)
         # print("y_pred shape:", y_pred.shape)
         # print("y_pred unique vals:", np.unique(y_pred))
         # print("y_dev shape:", y_dev.shape)
         correct = np.sum(y_pred == y_dev)
         tot = y_pred.shape[0]
         acc = correct/tot
-        return acc
+        return acc, Z_s
 
 if __name__ == "__main__":
     algos = ['raw', 'pca', 'lda']
     pr_types = ['char', 'digit']
     # pr_types = ['synth', 'image', 'char', 'digit']
-    
+
     for pr in pr_types:
         for algo in algos:
             model = MulticlassLR()
@@ -111,8 +113,10 @@ if __name__ == "__main__":
 
             print("X_train y_train shapes:", X_train.shape, y_train.shape)
             model.fit(X_train, y_train)
-            acc_tot = model.get_acc(X_dev, y_dev)
+            acc_tot, posts = model.get_acc(X_dev, y_dev)
 
             print(f"\n\n Overall Acc on {algo} {pr}: {acc_tot}\n\n")
+
+            roc_det(posts)
 
             print(f"\n\n Finished LogReg testing on {algo} {pr} \n\n")

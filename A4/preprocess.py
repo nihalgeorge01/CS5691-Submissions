@@ -3,6 +3,7 @@ import os
 import numpy as np
 import pickle as pkl
 import scipy.linalg
+import scipy.signal
 import argparse
 
 # Load Train and Dev Feats
@@ -35,7 +36,7 @@ def normalize_data(train_feats, dev_feats):
 
     return train_feats, dev_feats
 
-def transform_length(train_feats, dev_feats, dest_frames=200):
+def pad_length(train_feats, dev_feats, dest_frames=200):
     # Transform time series data into equal number of frames
     # Method: Find fourier coeffs, then extrapolate to longer length
 
@@ -52,6 +53,18 @@ def transform_length(train_feats, dev_feats, dest_frames=200):
             last_row = feats_here[-1,:]
             row_ct = feats_here.shape[0]
             dev_feats[cl][fn] = np.vstack([feats_here, np.tile(last_row, (dest_frames-row_ct,1))])
+    
+    return train_feats, dev_feats
+
+def resample(train_feats, dev_feats, dest_frames=100):
+    
+    for cl in sorted(list(train_feats.keys())):
+        for fn in sorted(list(train_feats[cl].keys())):
+            train_feats[cl][fn] = scipy.signal.resample(train_feats[cl][fn], dest_frames)
+    
+    for cl in sorted(list(dev_feats.keys())):
+        for fn in sorted(list(dev_feats[cl].keys())):
+            dev_feats[cl][fn] = scipy.signal.resample(dev_feats[cl][fn], dest_frames)
     
     return train_feats, dev_feats
 
@@ -118,7 +131,8 @@ def preprocess_digit():
             fn = fp.split('.')[0]
             dev_feats[cl][fn] = np.loadtxt(dev_path+fp, skiprows=1)
 
-    train_feats, dev_feats = transform_length(train_feats, dev_feats)
+    # train_feats, dev_feats = pad_length(train_feats, dev_feats)
+    train_feats, dev_feats = pad_length(train_feats, dev_feats)
     return train_feats, dev_feats
 
 def loadHW(path, angle=False):
@@ -179,7 +193,8 @@ def preprocess_char(hwr_angle=True):
                 feats_here = np.reshape(feats_here, [-1,1])
 
             dev_feats[cl][fn] = feats_here
-    train_feats, dev_feats = transform_length(train_feats, dev_feats)
+    # train_feats, dev_feats = pad_length(train_feats, dev_feats)
+    train_feats, dev_feats = pad_length(train_feats, dev_feats)
     return train_feats, dev_feats
 
 def pca(train_feats, dev_feats, dims=100):
@@ -333,30 +348,35 @@ def save_feats(feats, fp):
 if __name__ == '__main__':
     algos = ['raw', 'pca', 'lda']
     pr_types = ['synth', 'image', 'digit', 'char']
+    resize_method = 'pad_length'
     # pr_types = ['synth', 'image']
 
     for pr in pr_types:
         for algo in algos:
             train_feats, dev_feats = preprocess_choice(pr, algo)
-            with open(f'./Data/Pickles/{pr}_{algo}_train.pkl', 'wb') as f:
+            prefix = f'{pr}_{algo}'
+            if pr in ['digit', 'char']:
+                prefix += f'_{resize_method}'
+            
+            with open(f'./Data/Pickles/{prefix}_train.pkl', 'wb') as f:
                 save_feats(train_feats, f)
             
-            with open(f'./Data/Pickles/{pr}_{algo}_dev.pkl', 'wb') as f:
+            with open(f'./Data/Pickles/{prefix}_dev.pkl', 'wb') as f:
                 save_feats(dev_feats, f)
 
             X_train, y_train = datadict2np(train_feats)
             X_dev, y_dev = datadict2np(dev_feats)
             
-            with open(f'./Data/Pickles/{pr}_{algo}_train_np_X.pkl', 'wb') as f:
+            with open(f'./Data/Pickles/{prefix}_train_np_X.pkl', 'wb') as f:
                 save_feats(X_train, f)
 
-            with open(f'./Data/Pickles/{pr}_{algo}_train_np_y.pkl', 'wb') as f:
+            with open(f'./Data/Pickles/{prefix}_train_np_y.pkl', 'wb') as f:
                 save_feats(y_train, f)
             
-            with open(f'./Data/Pickles/{pr}_{algo}_dev_np_X.pkl', 'wb') as f:
+            with open(f'./Data/Pickles/{prefix}_dev_np_X.pkl', 'wb') as f:
                 save_feats(X_dev, f)
             
-            with open(f'./Data/Pickles/{pr}_{algo}_dev_np_y.pkl', 'wb') as f:
+            with open(f'./Data/Pickles/{prefix}_dev_np_y.pkl', 'wb') as f:
                 save_feats(y_dev, f)
 
-            print(f"Preprocessed {algo} {pr}")
+            print(f"Preprocessed {algo} {pr} {prefix}")
