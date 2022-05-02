@@ -14,7 +14,7 @@
 import numpy as np
 import pickle as pkl
 
-from knn import roc_det
+from knn import get_posts_list_from_scores, roc_det
 # from scipy.special import softmax
 
 # Constants
@@ -80,43 +80,53 @@ class MulticlassLR():
         # print("y_pred shape:", y_pred.shape)
         # print("y_pred unique vals:", np.unique(y_pred))
         # print("y_dev shape:", y_dev.shape)
+        posts_list = get_posts_list_from_scores(Z_s, y_dev)
         correct = np.sum(y_pred == y_dev)
         tot = y_pred.shape[0]
         acc = correct/tot
-        return acc, Z_s
+        return acc, posts_list
 
 if __name__ == "__main__":
     algos = ['raw', 'pca', 'lda']
-    pr_types = ['char', 'digit']
+    pr_types = ['synth']
+    resize_methods = ['resample', 'pad_length']
     # pr_types = ['synth', 'image', 'char', 'digit']
 
     for pr in pr_types:
+        posts_ll = {}
+        cases = []
         for algo in algos:
-            model = MulticlassLR()
+            for resize_method in resize_methods:
+                model = MulticlassLR()
+                prefix = f'{pr}_{algo}'
+                if pr in ['digit', 'char']:
+                    prefix += f'_{resize_method}'
+                print(f"\n\n Starting LogReg testing on {prefix} ... \n\n")
+                with open(f'./Data/Pickles/{prefix}_train_np_X.pkl', 'rb') as f:
+                    X_train = pkl.load(f)
 
-            print(f"\n\n Starting LogReg testing on {algo} {pr} ... \n\n")
-            with open(f'./Data/Pickles/{pr}_{algo}_train_np_X.pkl', 'rb') as f:
-                X_train = pkl.load(f)
+                with open(f'./Data/Pickles/{prefix}_train_np_y.pkl', 'rb') as f:
+                    y_train = pkl.load(f)
+                
+                with open(f'./Data/Pickles/{prefix}_dev_np_X.pkl', 'rb') as f:
+                    X_dev = pkl.load(f)
+                
+                with open(f'./Data/Pickles/{prefix}_dev_np_y.pkl', 'rb') as f:
+                    y_dev = pkl.load(f)
+                
+                if pr == 'synth' and algo == 'raw':
+                    #X_train = np.hstack([np.sqrt(np.sum(X_train**2, axis=1)).reshape([-1,1]), np.at
+                    _ = 1
 
-            with open(f'./Data/Pickles/{pr}_{algo}_train_np_y.pkl', 'rb') as f:
-                y_train = pkl.load(f)
-            
-            with open(f'./Data/Pickles/{pr}_{algo}_dev_np_X.pkl', 'rb') as f:
-                X_dev = pkl.load(f)
-            
-            with open(f'./Data/Pickles/{pr}_{algo}_dev_np_y.pkl', 'rb') as f:
-                y_dev = pkl.load(f)
-            
-            if pr == 'synth' and algo == 'raw':
-                #X_train = np.hstack([np.sqrt(np.sum(X_train**2, axis=1)).reshape([-1,1]), np.at
-                _ = 1
+                print("X_train y_train shapes:", X_train.shape, y_train.shape)
+                model.fit(X_train, y_train)
+                acc_tot, posts = model.get_acc(X_dev, y_dev)
+                posts_ll[prefix] = posts.copy()
+                cases.append(prefix)
 
-            print("X_train y_train shapes:", X_train.shape, y_train.shape)
-            model.fit(X_train, y_train)
-            acc_tot, posts = model.get_acc(X_dev, y_dev)
+                print(f"\n\n Overall Acc on {prefix}: {acc_tot}\n\n")
 
-            print(f"\n\n Overall Acc on {algo} {pr}: {acc_tot}\n\n")
-
-            roc_det(posts)
-
-            print(f"\n\n Finished LogReg testing on {algo} {pr} \n\n")
+                print(f"\n\n Finished LogReg testing on {prefix} \n\n")
+                if pr not in ['digit', 'char']:
+                    break
+        roc_det(posts_ll, cases, pr)

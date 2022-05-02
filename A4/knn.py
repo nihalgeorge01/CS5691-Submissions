@@ -12,6 +12,7 @@ from threading import Thread
 import numpy as np
 import pickle as pkl
 import matplotlib.pyplot as plt
+import scipy.stats as spst
 
 INF = 9999999999
 
@@ -28,6 +29,40 @@ class ThreadWithReturnValue(Thread):
     def join(self, *args):
         Thread.join(self, *args)
         return self._return
+
+def get_posts_list_from_scores(scores, y_dev):
+    posts_list = []
+
+    for i in range(scores.shape[0]):
+        posts_list.extend([[scores[i,j], j, y_dev[i]] for j in range(scores.shape[1])])
+    
+    return posts_list
+
+def plotConfMat(conf_mat, sorted_cls, pr_type='', algo='', extra='', sf=2):
+    # Plot confusion matrix
+    sf = 2
+    fig = plt.figure(figsize=(2.5*sf,2.5*sf))
+    plt.clf()
+    ax = fig.add_subplot(111)
+    ax.set_aspect(1)
+    res = ax.imshow(conf_mat, cmap=plt.cm.Blues, alpha=0.3, 
+                    interpolation='nearest')
+
+    width, height = conf_mat.shape
+
+    for x in range(width):
+        for y in range(height):
+            ax.annotate(str(int(conf_mat[x][y])), xy=(y, x), ha='center', va='center', size=6*sf)
+
+    cb = fig.colorbar(res)
+    cb.ax.tick_params(labelsize=6*sf)
+    plt.xticks(range(width), sorted_cls, fontsize=6*sf)
+    plt.yticks(range(height), sorted_cls, fontsize=6*sf)
+    plt.xlabel('Predicted', fontsize=6*sf)
+    plt.ylabel('True', fontsize=6*sf)
+    plt.title(f"Confusion Matrix {pr_type} {algo} {extra}", fontsize=6*sf)
+    plt.savefig(f'./Plots/conf_{pr_type}_{algo}_{extra}.png', format='png')
+    plt.show()
 
 def roc_det(posts_ll, cases, pr_type='', algo='', extra='', skip=1):
 
@@ -71,7 +106,24 @@ def roc_det(posts_ll, cases, pr_type='', algo='', extra='', skip=1):
         # roc_pts = [[fpr[i],tpr[i]] for i in range(len(tpr))]
         if c_id%skip == 0:
             ax1.plot(fpr, tpr)
-            ax2.plot(fpr, fnr)
+            # ax2.plot(fpr, fnr)
+            ax2.plot(spst.norm.ppf(fpr), spst.norm.ppf(fnr))
+            # display = sklearn.metrics.DetCurveDisplay(fpr=fpr, fnr=fnr)
+
+    
+    ticks = [0.001, 0.01, 0.05, 0.20, 0.5, 0.80, 0.95, 0.99, 0.999]
+    tick_locations = spst.norm.ppf(ticks)
+    tick_labels = [
+        "{:.0%}".format(s) if (100 * s).is_integer() else "{:.1%}".format(s)
+        for s in ticks
+    ]
+    ax2.set_xticks(tick_locations)
+    ax2.set_xticklabels(tick_labels)
+    ax2.set_xlim(-3, 3)
+    ax2.set_yticks(tick_locations)
+    ax2.set_yticklabels(tick_labels)
+    ax2.set_ylim(-3, 3)
+
     ax1.legend(cases[::skip])
     ax2.legend(cases[::skip])
     ax1.set_xlabel('False Positive Rate (FPR)')
@@ -80,8 +132,8 @@ def roc_det(posts_ll, cases, pr_type='', algo='', extra='', skip=1):
     ax2.set_xlabel('False Positive Rate (FPR)')
     ax2.set_ylabel('False Negative Rate (FNR)')
 
-    ax2.set_xscale('logit')
-    ax2.set_yscale('logit')
+    # ax2.set_xscale('logit')
+    # ax2.set_yscale('logit')
 
     # scale = 2
     # ticks = ticker.FuncFormatter(lambda x, pos: '{0:g}'.format(x*scale))
@@ -174,6 +226,8 @@ def knn(train_feats, dev_feats, distfun=euclidean, k=5):
 
     correct = 0
     total = 0
+
+    posts_list = []
 
     for dev_cl in sorted(list(dev_feats.keys())):
         for dev_fn in sorted(list(dev_feats[dev_cl].keys())):

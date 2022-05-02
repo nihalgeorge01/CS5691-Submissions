@@ -410,20 +410,20 @@ def roc_det(posts_ll, cases, pr_type='', algo='', extra='', skip=1):
         # roc_pts = [[fpr[i],tpr[i]] for i in range(len(tpr))]
         if c_id%skip == 0:
             ax1.plot(fpr, tpr)
-            ax2.plot(fpr, fnr)
-            # ax2.plot(spst.norm.ppf(fpr), spst.norm.ppf(fnr))
-            display = sklearn.metrics.DetCurveDisplay(fpr=fpr, fnr=fnr)
+            # ax2.plot(fpr, fnr)
+            ax2.plot(spst.norm.ppf(fpr), spst.norm.ppf(fnr))
+            # display = sklearn.metrics.DetCurveDisplay(fpr=fpr, fnr=fnr)
 
     
-    # ticks = [0.001, 0.01, 0.05, 0.20, 0.5, 0.80, 0.95, 0.99, 0.999]
-    # tick_locations = spst.norm.ppf(ticks)
-    # tick_labels = [
-    #     "{:.0%}".format(s) if (100 * s).is_integer() else "{:.1%}".format(s)
-    #     for s in ticks
-    # ]
-    # ax2.set_xticks(tick_locations)
-    # ax2.set_xticklabels(tick_labels)
-    # ax2.set_xlim(-3, 3)
+    ticks = [0.001, 0.01, 0.05, 0.20, 0.5, 0.80, 0.95, 0.99, 0.999]
+    tick_locations = spst.norm.ppf(ticks)
+    tick_labels = [
+        "{:.0%}".format(s) if (100 * s).is_integer() else "{:.1%}".format(s)
+        for s in ticks
+    ]
+    ax2.set_xticks(tick_locations)
+    ax2.set_xticklabels(tick_labels)
+    ax2.set_xlim(-3, 3)
     # ax2.set_yticks(tick_locations)
     # ax2.set_yticklabels(tick_labels)
     # ax2.set_ylim(-3, 3)
@@ -452,7 +452,7 @@ def roc_det(posts_ll, cases, pr_type='', algo='', extra='', skip=1):
     plt.show()
 
     plt.figure()
-    display.plot()
+    # display.plot()
     plt.show()
 
 # %%
