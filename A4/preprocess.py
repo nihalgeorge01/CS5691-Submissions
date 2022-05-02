@@ -2,6 +2,7 @@ import os
 
 import numpy as np
 import pickle as pkl
+import scipy.linalg
 import argparse
 
 # Load Train and Dev Feats
@@ -238,12 +239,13 @@ def lda(train_feats, dev_feats, dims=100):
         mean_sep = (cl_means[cl] - mean_all)
         SB += fn_ct * (mean_sep.T @ mean_sep)
 
-    print("mean sep shape:", mean_sep.shape)
-    print("Symm? : ", np.allclose(swi_sb, swi_sb.T, rtol=1e-4))
-    print("Symm? : ", np.allclose(swi_sb, swi_sb.T, rtol=1e-4))
+    # print("mean sep shape:", mean_sep.shape)
+    # print("Symm? SW : ", np.allclose(SW, SW.T, rtol=1e-6))
+    # print("Symm? SB : ", np.allclose(SB, SB.T, rtol=1e-6))
     swi_sb = np.linalg.inv(SW) @ SB
-    print("Symm? : ", np.allclose(swi_sb, swi_sb.T, rtol=1e-4))
-    e_vals, e_vecs = np.linalg.eig(swi_sb)
+    # print("Symm? SW-1 * SB: ", np.allclose(swi_sb, swi_sb.T, rtol=1e-6))
+    # e_vals, e_vecs = np.linalg.eig(swi_sb)
+    e_vals, e_vecs = scipy.linalg.eig(SW, SB)
     print("e_vals dtype:", e_vals.dtype)
     print("e_vecs dtype:", e_vecs.dtype)
 
