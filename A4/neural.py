@@ -40,9 +40,9 @@ if __name__ == "__main__":
             preds = classifier.predict(X_dev)
             errs = preds - y_dev
             mistakes = np.count_nonzero(errs)
-            print(mistakes)
+            print(f"Misclassifications: {mistakes}")
             acc = 1 - mistakes/(len(y_dev))
-            print(f"{algo}'s Accuracy on {pr} = {acc*100:.2f}%")
+            print(f"{algo}'s accuracy on {pr} = {acc*100:.2f}%")
             if pr == "synth":
                 x_plot, y_plot = make_meshgrid(X_train[:,0], X_train[:,1])
                 contour_plot(classifier,x_plot,y_plot)
