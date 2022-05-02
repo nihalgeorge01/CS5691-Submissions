@@ -2,7 +2,7 @@
 import pickle
 import numpy as np
 import matplotlib.pyplot as plt
-import sklearn.neural_network as nn
+import sklearn.svm as svm
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
@@ -18,10 +18,9 @@ def make_meshgrid(x, y, h=0.1):
     return xx, yy
 
 if __name__ == "__main__":
-    
     algos = ["raw","pca","lda"]
-    pr_types = ["synth", "image", "char", "digit"]
-    
+    pr_types = ['synth', 'image', 'char', 'digit']
+    # Support Vector Machines On Synthetic Data
     for pr in pr_types:
         for algo in algos:
             # Loading Data
@@ -33,7 +32,7 @@ if __name__ == "__main__":
                 X_dev = pickle.load(f)
             with open(f"Data/Pickles/{pr}_{algo}_dev_np_y.pkl","rb") as f:
                 y_dev = np.squeeze(pickle.load(f))
-            classifier = make_pipeline(StandardScaler(), nn.MLPClassifier(solver='adam', alpha=1e-6,hidden_layer_sizes=(30, 25, 20), random_state=5, max_iter=1000))
+            classifier = make_pipeline(StandardScaler(), svm.SVC(C=1e7, kernel="rbf", gamma="auto"))
 
             # Fit the data to X and y
             classifier.fit(X_train,y_train)
