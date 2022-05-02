@@ -18,17 +18,20 @@ def make_meshgrid(x, y, h=0.1):
     return xx, yy
 
 if __name__ == "__main__":
+    
+    algos = ["raw","pca","lda"]
+    pr_types = ['synth', 'image', 'char', 'digit']
     # Support Vector Machines On Synthetic Data
-    '''
-    for algos in ["raw","pca","lda"]:
+    
+    for algo in algos:
         # Loading Data
-        with open(f"Data/Pickles/synth_{algos}_train_np_X.pkl","rb") as f:
+        with open(f"Data/Pickles/synth_{algo}_train_np_X.pkl","rb") as f:
             X_train_syn = pickle.load(f)
-        with open(f"Data/Pickles/synth_{algos}_train_np_y.pkl","rb") as f:
+        with open(f"Data/Pickles/synth_{algo}_train_np_y.pkl","rb") as f:
             y_train_syn = np.squeeze(pickle.load(f))
-        with open(f"Data/Pickles/synth_{algos}_dev_np_X.pkl","rb") as f:
+        with open(f"Data/Pickles/synth_{algo}_dev_np_X.pkl","rb") as f:
             X_dev_syn = pickle.load(f)
-        with open(f"Data/Pickles/synth_{algos}_dev_np_y.pkl","rb") as f:
+        with open(f"Data/Pickles/synth_{algo}_dev_np_y.pkl","rb") as f:
             y_dev_syn = np.squeeze(pickle.load(f))
         classifier = make_pipeline(StandardScaler(), svm.SVC(C=1e7, kernel="rbf", gamma="auto"))
 
@@ -45,7 +48,7 @@ if __name__ == "__main__":
         plt.scatter(X_dev_syn[:500,0],X_dev_syn[:500,1])
         plt.scatter(X_dev_syn[500:,0],X_dev_syn[500:,1])
         plt.show()
-    '''
+    
     # Support Vector Machines on Image Data
 
     for algos in ["raw","pca","lda"]:
@@ -67,4 +70,4 @@ if __name__ == "__main__":
         mistakes = np.count_nonzero(errs)
         print(mistakes)
         acc = 1 - mistakes/(len(y_dev_img))
-        print(f"{algos}'s Accuracy = {acc*100:.2f}%")
+        print(f"{algos}'s accuracy = {acc*100:.2f}%")
