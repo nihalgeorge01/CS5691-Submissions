@@ -347,6 +347,7 @@ if __name__ == "__main__":
             
             acc_pr[pr] = acc_v_k_here.copy()
 
+    print("Acc_pr:", acc_pr)
     # Plot acc vs k for each dataset
     plt.figure()
     for pr in pr_types:

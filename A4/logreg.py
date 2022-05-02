@@ -139,6 +139,7 @@ if __name__ == "__main__":
             roc_det(posts_ll, cases, pr, extra='LogReg_vary_lr')
         acc_pr[pr] = acc_v_p_here.copy()
 
+    print("Acc_pr:", acc_pr)
     # Plot acc vs k for each dataset
     plt.figure()
     for pr in pr_types:
