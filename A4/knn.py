@@ -196,11 +196,11 @@ def knn(train_feats, dev_feats, distfun=euclidean, k=5):
             
             pred_cl = max(votes, key=votes.get)
             if dev_cl == pred_cl:
-                print(f"Passed {dev_fn} Pred class: {pred_cl}")
+                # print(f"Passed {dev_fn} Pred class: {pred_cl}")
                 correct += 1
             else:
-                print(f"Failed {dev_fn} -- Expected {dev_cl}, predicted {pred_cl}")
-            
+                # print(f"Failed {dev_fn} -- Expected {dev_cl}, predicted {pred_cl}")
+                _ = 1
             total += 1
     acc = correct/total
     return acc
@@ -212,9 +212,9 @@ def distfun_choice(pr_type):
     elif pr_type == 'image':
         return euclidean
     elif pr_type == 'digit':
-        return dtw
+        return euclidean    # previously dtw
     elif pr_type == 'char':
-        return dtwAngle
+        return euclidean    # previously dtwangle
     else:
         print(f"Problem type '{pr_type}' not present")
         return None
@@ -230,7 +230,7 @@ if __name__ == "__main__":
 
         for pr in pr_types:
             for algo in algos:
-                print(f"\n\n Starting KNN testing on {algo} {pr} ... \n\n")
+                print(f"\n Starting KNN testing on {algo} {pr} ... \n")
                 with open(f'./Data/Pickles/{pr}_{algo}_train.pkl', 'rb') as f:
                     train_feats = pkl.load(f)
                 
@@ -255,23 +255,25 @@ if __name__ == "__main__":
                 
                 acc_tot /= sum([v[1] for v in thread_lst])
                 
-                print(f"\n\n Overall Acc on {algo} {pr}: {acc_tot}\n\n")
+                print(f"\n Overall Acc on {algo} {pr}: {acc_tot}\n")
                 # acc = knn(train_feats, dev_feats, distfun_choice(pr))
                 
-                print(f"\n\n Finished KNN testing on {algo} {pr} \n\n")
+                print(f"\n Finished KNN testing on {algo} {pr} \n")
 
     else:
         # Single thread
-        for pr in pr_types:
-            for algo in algos:
-                print(f"\n\n Starting KNN testing on {algo} {pr} ... \n\n")
-                with open(f'./Data/Pickles/{pr}_{algo}_train.pkl', 'rb') as f:
-                    train_feats = pkl.load(f)
-                
-                with open(f'./Data/Pickles/{pr}_{algo}_dev.pkl', 'rb') as f:
-                    dev_feats = pkl.load(f)
-                
-                acc_tot = knn(train_feats, dev_feats, distfun_choice(pr))
-                print(f"\n\n Overall Acc on {algo} {pr}: {acc_tot}\n\n")
+        for k in range(1,20):
+            print(f"\n\nStarting k={k} ... \n\n")
+            for pr in pr_types:
+                for algo in algos:
+                    print(f"\nStarting KNN testing on {algo} {pr} ...")
+                    with open(f'./Data/Pickles/{pr}_{algo}_train.pkl', 'rb') as f:
+                        train_feats = pkl.load(f)
+                    
+                    with open(f'./Data/Pickles/{pr}_{algo}_dev.pkl', 'rb') as f:
+                        dev_feats = pkl.load(f)
+                    
+                    acc_tot = knn(train_feats, dev_feats, distfun_choice(pr), k=10)
+                    print(f"Overall Acc on {algo} {pr}: {acc_tot}")
 
-                print(f"\n\n Finished KNN testing on {algo} {pr} \n\n")
+                    print(f"Finished KNN testing on {algo} {pr} \n")
