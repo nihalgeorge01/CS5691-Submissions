@@ -27,6 +27,7 @@ if __name__ == "__main__":
         posts_ll = {}
         cases = []
         for algo in algos:
+            prefix = f'{pr}_{algo}'
             # Loading Data
             with open(f"Data/Pickles/{pr}_{algo}_train_np_X.pkl","rb") as f:
                 X_train = pickle.load(f)
@@ -43,7 +44,9 @@ if __name__ == "__main__":
             preds = classifier.predict(X_dev)
             scores = classifier.predict_proba(X_dev)
             posts = get_posts_list_from_scores(scores,y_dev)
-
+            posts_ll[prefix] = posts.copy()
+            cases.append(prefix)
+            
             errs = preds - y_dev
             mistakes = np.count_nonzero(errs)
             print(f"Misclassifications: {mistakes} in {len(preds)}")
