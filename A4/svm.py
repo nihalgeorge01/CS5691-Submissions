@@ -6,6 +6,8 @@ import sklearn.svm as svm
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
+from knn import get_posts_list_from_scores
+
 # Creating the required utility functions
 
 def contour_plot(classifier, x2d, y2d):
@@ -22,6 +24,8 @@ if __name__ == "__main__":
     pr_types = ['synth', 'image']
     # Support Vector Machines On Synthetic Data
     for pr in pr_types:
+        posts_ll = {}
+        cases = []
         for algo in algos:
             # Loading Data
             with open(f"Data/Pickles/{pr}_{algo}_train_np_X.pkl","rb") as f:
@@ -37,6 +41,9 @@ if __name__ == "__main__":
             # Fit the data to X and y
             classifier.fit(X_train,y_train)
             preds = classifier.predict(X_dev)
+            scores = classifier.predict_proba(X_dev)
+            posts = get_posts_list_from_scores(scores,y_dev)
+
             errs = preds - y_dev
             mistakes = np.count_nonzero(errs)
             print(f"Misclassifications: {mistakes} in {len(preds)}")
@@ -48,6 +55,7 @@ if __name__ == "__main__":
                 plt.scatter(X_dev[:500,0],X_dev[:500,1])
                 plt.scatter(X_dev[500:,0],X_dev[500:,1])
                 plt.show()
+    
     pr_types = ["char", "digit"]
     rect_types = ["pad_length", "resample"]
     for pr in pr_types:
