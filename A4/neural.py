@@ -18,7 +18,6 @@ def make_meshgrid(x, y, h=0.1):
     return xx, yy
 
 if __name__ == "__main__":
-    """
     # Artificial Neural Networks On Synthetic Data
 
     for algos in ["raw","pca","lda"]:
@@ -46,7 +45,7 @@ if __name__ == "__main__":
         plt.scatter(X_dev_syn[:500,0],X_dev_syn[:500,1])
         plt.scatter(X_dev_syn[500:,0],X_dev_syn[500:,1])
         plt.show()
-    """
+
     # Artificial Neural Networks on Image Data
 
     for algos in ["raw","pca","lda"]:
@@ -69,10 +68,3 @@ if __name__ == "__main__":
         print(mistakes)
         acc = 1 - mistakes/(len(y_dev_img))
         print(f"Accuracy = {acc*100:.2f}%")
-        """
-        x_plot, y_plot = make_meshgrid(X_train_img[:,0], X_train_img[:,1])
-        contour_plot(classifier,x_plot,y_plot)
-        plt.scatter(X_dev_img[:500,0],X_dev_img[:500,1])
-        plt.scatter(X_dev_img[500:,0],X_dev_img[500:,1])
-        plt.show()
-        """
