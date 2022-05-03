@@ -6,7 +6,7 @@ import sklearn.svm as svm
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from knn import get_posts_list_from_scores
+from knn import get_posts_list_from_scores, roc_det
 
 # Creating the required utility functions
 
@@ -40,7 +40,7 @@ if __name__ == "__main__":
                 X_dev = pickle.load(f)
             with open(f"Data/Pickles/{pr}_{algo}_dev_np_y.pkl","rb") as f:
                 y_dev = np.squeeze(pickle.load(f))
-            classifier = make_pipeline(StandardScaler(), svm.SVC(C=C, kernel=kernel, gamma="auto"))
+            classifier = make_pipeline(StandardScaler(), svm.SVC(C=C, kernel=kernel, gamma="auto", probability=True))
 
             # Fit the data to X and y
             classifier.fit(X_train,y_train)
@@ -61,10 +61,13 @@ if __name__ == "__main__":
                 plt.scatter(X_dev[:500,0],X_dev[:500,1])
                 plt.scatter(X_dev[500:,0],X_dev[500:,1])
                 plt.show()
-    
+        roc_det(posts_ll, cases, pr, extra=f"SVM_{C}_{kernel}")
+        plt.show()
     pr_types = ["char", "digit"]
     rect_types = ["pad_length", "resample"]
     for pr in pr_types:
+        posts_ll = {}
+        cases = []
         for algo in algos:
             for rect in rect_types:
                 # Loading Data
@@ -76,7 +79,7 @@ if __name__ == "__main__":
                     X_dev = pickle.load(f)
                 with open(f"Data/Pickles/{pr}_{algo}_{rect}_dev_np_y.pkl","rb") as f:
                     y_dev = np.squeeze(pickle.load(f))
-                classifier = make_pipeline(StandardScaler(), svm.SVC(C=C, kernel=kernel, gamma="auto"))
+                classifier = make_pipeline(StandardScaler(), svm.SVC(C=C, kernel=kernel, gamma="auto", probability=True))
 
                 # Fit the data to X and y
                 classifier.fit(X_train,y_train)
@@ -87,3 +90,10 @@ if __name__ == "__main__":
                 acc = 1 - mistakes/(len(y_dev))
                 s = "padding" if rect=="pad_length" else "resampling"
                 print(f"{algo}'s accuracy on {pr} with {s} = {acc*100:.2f}%")
+
+                scores = classifier.predict_proba(X_dev)
+                posts_list = get_posts_list_from_scores(scores, y_dev)
+                posts_ll[f'{pr}_{algo}_{rect}'] = posts_list.copy()
+                cases.append(f'{pr}_{algo}_{rect}')
+        roc_det(posts_ll, cases, pr, extra=f"SVM_{C}_{kernel}")
+        plt.show()

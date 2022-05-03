@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import sklearn.neural_network as nn
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+from knn import get_posts_list_from_scores, roc_det
 
 # Creating the required utility functions
 
@@ -18,7 +19,7 @@ def make_meshgrid(x, y, h=0.1):
     return xx, yy
 
 optimizer = "adam"
-alpha = 1e-3
+alpha = 1e-6
 hidden_layer = (30,25,20)
 
 if __name__ == "__main__":
@@ -27,6 +28,8 @@ if __name__ == "__main__":
     pr_types = ["synth", "image"]
     
     for pr in pr_types:
+        posts_ll = {}
+        cases = []
         for algo in algos:
             # Loading Data
             with open(f"Data/Pickles/{pr}_{algo}_train_np_X.pkl","rb") as f:
@@ -53,9 +56,17 @@ if __name__ == "__main__":
                 plt.scatter(X_dev[:500,0],X_dev[:500,1])
                 plt.scatter(X_dev[500:,0],X_dev[500:,1])
                 plt.show()
+            scores = classifier.predict_proba(X_dev)
+            posts_list = get_posts_list_from_scores(scores, y_dev)
+            posts_ll[f'{pr}_{algo}'] = posts_list.copy()
+            cases.append(f'{pr}_{algo}')
+        roc_det(posts_ll, cases, pr, extra=f"ANN_{optimizer}_{alpha}")
+        plt.show()
     pr_types = ["char", "digit"]
     rect_types = ["pad_length", "resample"]
     for pr in pr_types:
+        posts_ll = {}
+        cases = []
         for algo in algos:
             for rect in rect_types:
                 # Loading Data
@@ -78,3 +89,10 @@ if __name__ == "__main__":
                 acc = 1 - mistakes/(len(y_dev))
                 s = "padding" if rect=="pad_length" else "resampling"
                 print(f"{algo}'s accuracy on {pr} with {s} = {acc*100:.2f}%")
+
+                scores = classifier.predict_proba(X_dev)
+                posts_list = get_posts_list_from_scores(scores, y_dev)
+                posts_ll[f'{pr}_{algo}_{rect}'] = posts_list.copy()
+                cases.append(f'{pr}_{algo}_{rect}')
+        roc_det(posts_ll, cases, pr, extra=f"ANN_{optimizer}_{alpha}")
+        plt.show()
