@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import sklearn.svm as svm
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import confusion_matrix
 
 from knn import get_posts_list_from_scores, roc_det
 
