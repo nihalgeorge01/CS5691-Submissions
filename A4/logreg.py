@@ -27,6 +27,16 @@ def sigmoid(x):
 def softmax(v, axis=1):
     return np.exp(v)/np.sum(np.exp(v), axis=1).reshape([-1,1])
 
+def polyfeatures(X, deg=6):
+    # Get polynomial features upto some degree
+    feat_ct = X.shape[1]
+    for j in range(feat_ct):
+        col_here = X[:,j]
+        for d in range(2, deg):
+            X = np.hstack((X, (col_here**d).reshape([-1,1])))
+
+    return X
+
 def label2onehot(y_l):
     classes = sorted(list(np.unique(y_l)))
     cl_ct = len(classes)
@@ -95,7 +105,8 @@ if __name__ == "__main__":
     resize_methods = ['resample']
     pr_types = ['synth', 'image', 'char', 'digit']
 
-    lr_range = [1e-6,1e-5,1e-4,1e-3,1e-2,1e-1,1e0]
+    # lr_range = [1e-6,1e-5,1e-4,1e-3,1e-2,1e-1,1e0]
+    lr_range = [1e-2]
     acc_pr = {k:None for k in pr_types}
     for pr in pr_types:
         acc_v_p_here = []
@@ -125,8 +136,10 @@ if __name__ == "__main__":
                         #X_train = np.hstack([np.sqrt(np.sum(X_train**2, axis=1)).reshape([-1,1]), np.at
                         _ = 1
 
-                    print("X_train y_train shapes:", X_train.shape, y_train.shape)
-                    model.fit(X_train, y_train, lr=lr)
+                    # print("X_train y_train shapes:", X_train.shape, y_train.shape)
+                    deg = 2
+                    X_train, X_dev = polyfeatures(X_train, deg), polyfeatures(X_dev, deg)
+                    model.fit(X_train, y_train, lr=3e-3, iter_ct=5000)
                     acc_tot, posts = model.get_acc(X_dev, y_dev)
                     posts_ll[prefix+f'{lr}'] = posts.copy()
                     cases.append(prefix+f'{lr}')
@@ -136,16 +149,16 @@ if __name__ == "__main__":
                     print(f"\n\n Finished LogReg testing on lr={lr}, {prefix} \n\n")
                     # if pr not in ['digit', 'char']:
                     #     break
-            roc_det(posts_ll, cases, pr, extra='LogReg_vary_lr')
+            roc_det(posts_ll, cases, pr, extra='LogReg_poly_testing')
         acc_pr[pr] = acc_v_p_here.copy()
 
     print("Acc_pr:", acc_pr)
     # Plot acc vs k for each dataset
-    plt.figure()
-    for pr in pr_types:
-        plt.plot(lr_range, acc_pr[pr])
+    # plt.figure()
+    # for pr in pr_types:
+    #     plt.plot(lr_range, acc_pr[pr])
     
-    plt.legend(pr_types)
-    plt.title('Acc vs Learning Rate for Different Datasets')
-    plt.savefig('./Plots/LogReg_Acc_vs_lr_at_reg_0_iters_1k_all.png')
-    plt.show()
+    # plt.legend(pr_types)
+    # plt.title('Acc vs Learning Rate for Different Datasets')
+    # plt.savefig('./Plots/LogReg_Acc_vs_lr_at_reg_0_iters_1k_all.png')
+    # plt.show()
