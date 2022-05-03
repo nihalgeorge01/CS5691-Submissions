@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import sklearn.svm as svm
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
 
 from knn import get_posts_list_from_scores, roc_det
 
@@ -41,29 +41,34 @@ if __name__ == "__main__":
                 X_dev = pickle.load(f)
             with open(f"Data/Pickles/{pr}_{algo}_dev_np_y.pkl","rb") as f:
                 y_dev = np.squeeze(pickle.load(f))
-            classifier = make_pipeline(StandardScaler(), svm.SVC(C=C, kernel=kernel, gamma="auto", probability=True))
+            classifier = make_pipeline(StandardScaler(), svm.SVC(C=C, kernel=kernel, gamma="auto")) #, probability=True))
 
             # Fit the data to X and y
             classifier.fit(X_train,y_train)
             preds = classifier.predict(X_dev)
-            scores = classifier.predict_proba(X_dev)
-            posts = get_posts_list_from_scores(scores,y_dev)
-            posts_ll[prefix] = posts.copy()
-            cases.append(prefix)
+            #scores = classifier.predict_proba(X_dev)
+            #posts = get_posts_list_from_scores(scores,y_dev)
+            #posts_ll[prefix] = posts.copy()
+            #cases.append(prefix)
             
             errs = preds - y_dev
             mistakes = np.count_nonzero(errs)
             #print(f"Misclassifications: {mistakes} in {len(preds)}")
             acc = 1 - mistakes/(len(y_dev))
             print(f"{algo}'s accuracy on {pr} = {acc*100:.2f}%")
+            conf_mat = confusion_matrix(y_dev, preds)
+            plot = ConfusionMatrixDisplay(confusion_matrix=conf_mat)
+            plot.plot()
+            plt.savefig(f"Plots/confmat_SVM_{pr}_{algo}")
+            plt.show()
             if False:#pr == "synth":
                 x_plot, y_plot = make_meshgrid(X_train[:,0], X_train[:,1])
                 contour_plot(classifier,x_plot,y_plot)
                 plt.scatter(X_dev[:500,0],X_dev[:500,1])
                 plt.scatter(X_dev[500:,0],X_dev[500:,1])
                 plt.show()
-        roc_det(posts_ll, cases, pr, extra=f"SVM_{C}_{kernel}")
-        plt.show()
+        #roc_det(posts_ll, cases, pr, extra=f"SVM_{C}_{kernel}")
+        #plt.show()
     pr_types = ["char", "digit"]
     rect_types = ["pad_length", "resample"]
     for pr in pr_types:
@@ -91,6 +96,12 @@ if __name__ == "__main__":
                 acc = 1 - mistakes/(len(y_dev))
                 s = "padding" if rect=="pad_length" else "resampling"
                 print(f"{algo}'s accuracy on {pr} with {s} = {acc*100:.2f}%")
+
+                conf_mat = confusion_matrix(y_dev, preds)
+                plot = ConfusionMatrixDisplay(confusion_matrix=conf_mat)
+                plot.plot()
+                plt.savefig(f"Plots/confmat_SVM_{pr}_{algo}_{rect}")
+                plt.show()
 
                 scores = classifier.predict_proba(X_dev)
                 posts_list = get_posts_list_from_scores(scores, y_dev)

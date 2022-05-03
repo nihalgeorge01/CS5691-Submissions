@@ -6,6 +6,7 @@ import sklearn.neural_network as nn
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from knn import get_posts_list_from_scores, roc_det
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 # Creating the required utility functions
 
@@ -50,6 +51,11 @@ if __name__ == "__main__":
             #print(f"Misclassifications: {mistakes} in {len(preds)}")
             acc = 1 - mistakes/(len(y_dev))
             print(f"{algo}'s accuracy on {pr} = {acc*100:.2f}%")
+            conf_mat = confusion_matrix(y_dev, preds)
+            plot = ConfusionMatrixDisplay(confusion_matrix=conf_mat)
+            plot.plot()
+            plt.savefig(f"Plots/confmat_ANN_{pr}_{algo}")
+            plt.show()
             if False:#pr == "synth":
                 x_plot, y_plot = make_meshgrid(X_train[:,0], X_train[:,1])
                 contour_plot(classifier,x_plot,y_plot)
@@ -89,7 +95,11 @@ if __name__ == "__main__":
                 acc = 1 - mistakes/(len(y_dev))
                 s = "padding" if rect=="pad_length" else "resampling"
                 print(f"{algo}'s accuracy on {pr} with {s} = {acc*100:.2f}%")
-
+                conf_mat = confusion_matrix(y_dev, preds)
+                plot = ConfusionMatrixDisplay(confusion_matrix=conf_mat)
+                plot.plot()
+                plt.savefig(f"Plots/confmat_ANN_{pr}_{algo}_{rect}")
+                plt.show()
                 scores = classifier.predict_proba(X_dev)
                 posts_list = get_posts_list_from_scores(scores, y_dev)
                 posts_ll[f'{pr}_{algo}_{rect}'] = posts_list.copy()
