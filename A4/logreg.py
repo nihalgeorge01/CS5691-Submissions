@@ -25,7 +25,7 @@ def sigmoid(x):
     return 1/(1+np.exp(-x))
 
 def softmax(v, axis=1):
-    return np.exp(v)/np.sum(np.exp(v), axis=1).reshape([-1,1])
+    return np.exp(v)/np.sum(np.exp(v), axis=axis).reshape([-1,1])
 
 def polyfeatures(X, deg=6):
     # Get polynomial features upto some degree
